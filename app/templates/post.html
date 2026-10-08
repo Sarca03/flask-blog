@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row">
+    <div class="col-lg-8 mx-auto">
+        <!-- Članak -->
+        <article class="card border-0 shadow-sm rounded-4 mb-4">
+            <div class="card-body p-5">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <span class="badge bg-primary-subtle text-primary px-3 py-2 rounded-pill small">
+                        <i class="fa-solid fa-user me-1"></i> {{ post.author.username }}
+                    </span>
+                    <small class="text-muted"><i class="fa-regular fa-calendar me-1"></i> {{ post.date_posted.strftime('%d.%m.%Y. u %H:%M') }}</small>
+                </div>
+
+                <h1 class="fw-bold mb-2">{{ post.title }}</h1>
+                {% if post.subtitle %}
+                    <h5 class="text-muted fw-normal mb-4">{{ post.subtitle }}</h5>
+                {% endif %}
+
+                {% if post.author == current_user or current_user.is_admin %}
+                    <div class="mb-4 pb-3 border-bottom">
+                        <a class="btn btn-outline-secondary btn-sm rounded-pill px-3 me-2" href="{{ url_for('routes.update_post', post_id=post.id) }}">
+                            <i class="fa-solid fa-pen-to-square me-1"></i> Izmeni
+                        </a>
+                        <button type="button" class="btn btn-outline-danger btn-sm rounded-pill px-3" data-bs-toggle="modal" data-bs-target="#deleteModal">
+                            <i class="fa-solid fa-trash me-1"></i> Obriši
+                        </button>
+                    </div>
+                {% endif %}
+
+                <div class="article-content text-secondary" style="white-space: pre-line; line-height: 1.8;">
+                    {{ post.content }}
+                </div>
+            </div>
+        </article>
+
+        <!-- Sekcija za komentare -->
+        <div class="card border-0 shadow-sm rounded-4 p-4 mb-5">
+            <h4 class="fw-bold mb-4"><i class="fa-regular fa-comments me-2 text-primary"></i>Komentari ({{ post.comments|length }})</h4>
+
+            {% if current_user.is_authenticated %}
+                <form method="POST" class="mb-4">
+                    {{ form.hidden_tag() }}
+                    <div class="mb-3">
+                        {{ form.content.label(class="form-label fw-semibold small") }}
+                        {% if form.content.errors %}
+                            {{ form.content(class="form-control is-invalid rounded-3", rows="3") }}
+                            <div class="invalid-feedback">
+                                {% for error in form.content.errors %}
+                                    <span>{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            {{ form.content(class="form-control rounded-3", rows="3", placeholder="Napiši komentar...") }}
+                        {% endif %}
+                    </div>
+                    {{ form.submit(class="btn btn-primary rounded-pill px-4 btn-sm") }}
+                </form>
+                <hr class="text-muted opacity-25 my-4">
+            {% else %}
+                <div class="alert alert-secondary small rounded-3 mb-4">
+                    Moraš se <a href="{{ url_for('routes.login') }}" class="alert-link">prijaviti</a> da bi ostavio komentar.
+                </div>
+            {% endif %}
+
+            <!-- Lista komentara -->
+            <div class="comments-list">
+                {% for comment in post.comments %}
+                    <div class="d-flex mb-3 p-3 bg-light rounded-3">
+                        <div class="flex-shrink-0">
+                            <i class="fa-solid fa-user-circle fa-2x text-secondary"></i>
+                        </div>
+                        <div class="flex-grow-1 ms-3">
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <h6 class="mb-0 fw-bold small text-dark">{{ comment.author.username }}</h6>
+                                <small class="text-muted" style="font-size: 0.75rem;">{{ comment.date_posted.strftime('%d.%m.%Y. u %H:%M') }}</small>
+                            </div>
+                            <p class="mb-0 small text-secondary">{{ comment.content }}</p>
+                        </div>
+                    </div>
+                {% else %}
+                    <p class="text-muted small fst-italic mb-0">Još uvek nema komentara na ovaj članak. Budite prvi!</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal za potvrdu brisanja -->
+<div class="modal fade" id="deleteModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 rounded-4">
+            <div class="modal-header border-0 pb-0">
+                <h5 class="modal-title fw-bold">Potvrda brisanja</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body text-secondary">
+                Da li si siguran da želiš trajno da obrišeš ovaj članak? Ova akcija se ne može poništiti.
+            </div>
+            <div class="modal-footer border-0 pt-0">
+                <button type="button" class="btn btn-outline-secondary btn-sm rounded-pill px-4" data-bs-dismiss="modal">Otkaži</button>
+                <form action="{{ url_for('routes.delete_post', post_id=post.id) }}" method="POST">
+                    <input class="btn btn-danger btn-sm rounded-pill px-4" type="submit" value="Obriši">
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

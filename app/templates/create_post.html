@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% from "_macros.html" import field %}
+{% block content %}
+<section class="form-page narrow">
+    <h1>{{ legend }}</h1>
+    <span class="brush-note">piši kao da objašnjavaš drugaru</span>
+    <form method="POST" novalidate>
+        {{ form.hidden_tag() }}
+        {{ field(form.title) }}
+        {{ field(form.subtitle) }}
+        {{ field(form.content, rows=14) }}
+        <p class="form-hint">Prazan red pravi novi pasus. Kod u rečenici ide između znakova `, a blok koda između dve linije sa ```.</p>
+        <div class="form-row">
+            <a class="btn btn--ghost" href="{{ url_for('routes.home') }}">Otkaži</a>
+            {{ form.submit(class="btn") }}
+        </div>
+    </form>
+</section>
+{% endblock %}

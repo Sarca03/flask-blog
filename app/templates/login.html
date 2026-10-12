@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% from "_macros.html" import field %}
+{% block content %}
+<section class="form-page narrow" style="max-width:440px">
+    <h1>Prijava</h1>
+    <span class="brush-note">da ostaviš komentar</span>
+    <form method="POST" novalidate>
+        {{ form.hidden_tag() }}
+        {{ field(form.email) }}
+        {{ field(form.password) }}
+        <label class="check">{{ form.remember() }} {{ form.remember.label.text }}</label>
+        {{ form.submit(class="btn", style="width:100%") }}
+    </form>
+    <p class="form-foot">Nemaš nalog? <a href="{{ url_for('routes.register') }}">Registruj se</a></p>
+</section>
+{% endblock %}

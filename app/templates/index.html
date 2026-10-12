@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% from "_macros.html" import cover %}
+{% block content %}
+{% set latest = posts.items[0] if posts.items else None %}
+
+{% if posts.page == 1 %}
+<section class="hero wrap">
+    <div class="hero__circle">
+        <div class="hero__disc"></div>
+        <span class="hero__brush" aria-hidden="true">Beleške</span>
+        <h1 class="hero__title">DEVBLOG</h1>
+        {% if latest %}
+            <a class="hero__cta caps" href="{{ url_for('routes.post', post_id=latest.id) }}">Najnoviji članak</a>
+        {% endif %}
+    </div>
+    <p class="hero__lede">Pišem o projektima na kojima radim: šta je pošlo naopako, kako sam to našao i kako je rešeno.</p>
+    {% if posts.items %}
+    <nav class="tabs caps" aria-label="Najnoviji članci">
+        {% for p in posts.items[:3] %}
+            <a href="{{ url_for('routes.post', post_id=p.id) }}">{{ p.title|truncate(26, True, '…') }}</a>
+        {% endfor %}
+    </nav>
+    {% endif %}
+</section>
+
+{% if latest %}
+<section class="featured wrap" aria-labelledby="izdvojeno">
+    <span id="izdvojeno" class="label caps">Izdvojeno</span>
+    <div class="grid3">
+        <div class="stack">
+            <a class="tile cover cover--3" href="https://github.com/Sarca03" target="_blank" rel="noopener">
+                <span class="cover__frame"></span>
+                <div><h3>Kod na GitHub-u</h3><span class="caps">Sarca03</span></div>
+            </a>
+            <a class="tile cover cover--1" href="https://pro-task-manager-vryi.onrender.com" target="_blank" rel="noopener">
+                <span class="cover__frame"></span>
+                <div><h3>Task menadžer</h3><span class="caps">Projekat uživo</span></div>
+            </a>
+        </div>
+        <a class="tile tile--big cover cover--{{ latest.id % 4 }}" href="{{ url_for('routes.post', post_id=latest.id) }}">
+            <span class="cover__frame"></span>
+            <div>
+                <h3>{{ latest.title }}</h3>
+                <span class="caps">Pročitaj</span>
+            </div>
+        </a>
+        <a class="tile cover cover--1" href="https://car-wash-bogdan.netlify.app" target="_blank" rel="noopener" style="min-height:100%">
+            <span class="cover__frame"></span>
+            <div><h3>Auto perionica</h3><span class="caps">Projekat uživo</span></div>
+        </a>
+    </div>
+</section>
+{% endif %}
+{% endif %}
+
+<section class="posts wrap" id="clanci" aria-labelledby="sa-bloga">
+    <span id="sa-bloga" class="label caps">Sa bloga</span>
+    {% if posts.items %}
+    <div class="cards">
+        {% for post in posts.items %}
+            <article class="card">
+                <a href="{{ url_for('routes.post', post_id=post.id) }}" tabindex="-1" aria-hidden="true">{{ cover(post) }}</a>
+                <h3><a href="{{ url_for('routes.post', post_id=post.id) }}">{{ post.title }}</a></h3>
+                <p>{{ (post.subtitle or post.content)|truncate(120, True, '…') }}</p>
+                <a class="more caps" href="{{ url_for('routes.post', post_id=post.id) }}">Pročitaj više…</a>
+            </article>
+        {% endfor %}
+    </div>
+    {% else %}
+        <p class="empty">Još nema članaka.</p>
+    {% endif %}
+
+    {% if posts.pages > 1 %}
+    <nav class="pager" aria-label="Stranice">
+        {% for page_num in posts.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+            {% if page_num %}
+                {% if posts.page == page_num %}
+                    <span class="is-current" aria-current="page">{{ page_num }}</span>
+                {% else %}
+                    <a href="{{ url_for('routes.home', page=page_num) }}">{{ page_num }}</a>
+                {% endif %}
+            {% else %}
+                <span>…</span>
+            {% endif %}
+        {% endfor %}
+    </nav>
+    {% endif %}
+</section>
+{% endblock %}

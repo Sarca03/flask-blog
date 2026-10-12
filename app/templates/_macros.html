@@ -1,0 +1,19 @@
+{# Crno-bela naslovnica nacrtana u CSS-u, jer članci nemaju slike #}
+{% macro cover(post, cls='') -%}
+<div class="cover cover--{{ post.id % 4 }} {{ cls }}" aria-hidden="true">
+    <span class="cover__frame"></span>
+    <span class="cover__num">#{{ '%02d' % post.id }}</span>
+</div>
+{%- endmacro %}
+
+{% macro field(f, rows=None, placeholder=None) -%}
+<div class="field">
+    {{ f.label(class="caps") }}
+    {% if rows %}{{ f(rows=rows, placeholder=placeholder or '') }}{% else %}{{ f(placeholder=placeholder or '') }}{% endif %}
+    {% for error in f.errors %}<div class="error">{{ error }}</div>{% endfor %}
+</div>
+{%- endmacro %}
+
+{% macro squiggle() -%}
+<svg class="squiggle" width="54" height="10" viewBox="0 0 54 10" aria-hidden="true"><path d="M1 5c4-5 8 5 13 0s8 5 13 0 8 5 13 0 8 5 13 0" fill="none" stroke="currentColor" stroke-width="1.4"/></svg>
+{%- endmacro %}

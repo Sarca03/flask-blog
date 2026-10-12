@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% from "_macros.html" import cover, field, squiggle %}
+{% block content %}
+<article class="article wrap">
+    {{ cover(post, 'article__cover') }}
+    <div class="narrow">
+        <span class="label caps" style="margin:0">Sa bloga</span>
+        <h1>{{ post.title }}</h1>
+        {% if post.subtitle %}<p class="subtitle">{{ post.subtitle }}</p>{% endif %}
+        <span class="meta caps">{{ post.date_posted.strftime('%d.%m.%Y.') }} · {{ post.comments|length }} {{ 'komentar' if post.comments|length % 10 == 1 and post.comments|length % 100 != 11 else 'komentara' }}</span>
+
+        {% if current_user.is_authenticated and (post.author == current_user or current_user.is_admin) %}
+            <div class="actions caps">
+                <a href="{{ url_for('routes.update_post', post_id=post.id) }}">Izmeni</a>
+                <button type="button" class="danger caps" onclick="document.getElementById('delete-dialog').showModal()">Obriši</button>
+            </div>
+        {% endif %}
+
+        <div class="prose">{{ post.content|prose }}</div>
+    </div>
+</article>
+
+<section class="comments narrow" aria-labelledby="komentari">
+    {{ squiggle() }}
+    <span id="komentari" class="label caps">Komentari ({{ post.comments|length }})</span>
+
+    {% for comment in post.comments %}
+        <div class="comment">
+            <div class="comment__head caps"><strong>{{ comment.author.username }}</strong><span>{{ comment.date_posted.strftime('%d.%m.%Y.') }}</span></div>
+            <p>{{ comment.content }}</p>
+        </div>
+    {% else %}
+        <p class="note">Još nema komentara.</p>
+    {% endfor %}
+
+    <div style="margin-top:34px">
+    {% if current_user.is_authenticated %}
+        <form method="POST">
+            {{ form.hidden_tag() }}
+            {{ field(form.content, rows=3, placeholder='Napiši komentar…') }}
+            {{ form.submit(class="btn") }}
+        </form>
+    {% else %}
+        <p class="note"><a href="{{ url_for('routes.login', next=request.path) }}">Prijavi se</a> da ostaviš komentar.</p>
+    {% endif %}
+    </div>
+</section>
+
+{% if current_user.is_authenticated and (post.author == current_user or current_user.is_admin) %}
+<dialog id="delete-dialog">
+    <h2>Obriši članak?</h2>
+    <p>Članak i svi komentari biće trajno obrisani.</p>
+    <form class="form-row" action="{{ url_for('routes.delete_post', post_id=post.id) }}" method="POST">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <button type="button" class="btn btn--ghost" onclick="this.closest('dialog').close()">Otkaži</button>
+        <button type="submit" class="btn btn--danger">Obriši</button>
+    </form>
+</dialog>
+{% endif %}
+{% endblock %}

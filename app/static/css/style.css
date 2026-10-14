@@ -125,6 +125,7 @@ img { max-width: 100%; display: block; }
   letter-spacing: 0.2em;
   margin-right: -0.2em;
   z-index: 4;
+  pointer-events: none;
   text-shadow: 0 2px 12px rgba(0,0,0,.45);
 }
 .hero__brush {

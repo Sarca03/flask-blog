@@ -1,37 +1,39 @@
 # DevBlog
 
-Blog u Flasku gde pišem o greškama na koje sam naišao u svojim projektima i kako sam ih rešio.
-Čitaoci mogu da se registruju i komentarišu, a članke objavljuje samo admin.
+A Flask blog where I write about bugs I ran into on my projects and how I fixed them.
+Readers can sign up and comment, only the admin publishes posts.
 
-Uživo: https://flask-blog-ud95.onrender.com (besplatan Render server, prvo otvaranje traje oko pola minuta)
+Live: https://flask-blog-ud95.onrender.com (free Render server, the first visit takes about half a minute)
 
-## Šta radi
+The posts and the interface are in Serbian.
 
-- Registracija i prijava (Flask-Login, lozinke kao heš)
-- Članci sa podnaslovom, komentari i stranice po 5 članaka
-- Pisanje, izmena i brisanje članaka samo za admina; prvi registrovani nalog postaje admin
-- Prazan blog može da dobije tri primera članka (`SEED_DEMO_POSTS=true`)
+## What it does
 
-## Bezbednost
+- Sign up and login (Flask-Login, hashed passwords)
+- Posts with a subtitle, comments and pages of 5 posts
+- Only the admin can write, edit and delete posts; the first registered account becomes admin
+- An empty blog can get three sample posts (`SEED_DEMO_POSTS=true`)
 
-- CSRF token na svakoj formi, uključujući brisanje članka
-- Rute za pisanje proveravaju da li je korisnik admin (inače 403)
-- `SECRET_KEY` i adresa baze se čitaju iz okruženja
+## Security
 
-## Tehnologije
+- CSRF token on every form, including deleting a post
+- Write routes check that the user is admin (otherwise 403)
+- `SECRET_KEY` and the database address come from the environment
 
-Python 3, Flask, SQLAlchemy, Flask-Login, Flask-WTF, PostgreSQL (Neon), Jinja2 i čist CSS. Hostovano na Renderu.
+## Stack
 
-## Lokalno
+Python 3, Flask, SQLAlchemy, Flask-Login, Flask-WTF, PostgreSQL (Neon), Jinja2 and plain CSS. Hosted on Render.
+
+## Running locally
 
 ```bash
 pip install -r requirements.txt
-export SECRET_KEY=nesto-dugacko-i-nasumicno
+export SECRET_KEY=something-long-and-random
 python run.py
 ```
 
-Bez `DATABASE_URL` aplikacija koristi lokalni SQLite fajl. Otvori http://localhost:5000.
+Without `DATABASE_URL` the app uses a local SQLite file. Open http://localhost:5000.
 
-## Autor
+## Author
 
-Bogdan Šarčević, Užice
+Bogdan Šarčević, Užice, Serbia

@@ -422,6 +422,7 @@ dialog .form-row { justify-content: flex-end; }
   .tile--big { grid-row: auto; min-height: 300px; }
   .cards { grid-template-columns: 1fr; gap: 40px; }
   .footer__cols { grid-template-columns: 1fr 1fr; }
+  .footer a { overflow-wrap: anywhere; }
   .footer__thanks { position: static; display: block; text-align: right; margin-top: -10px; }
   .tabs { gap: 10px 26px; }
 }

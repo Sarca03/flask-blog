@@ -41,7 +41,6 @@ def create_app():
     app.add_template_filter(render_prose, 'prose')
 
     with app.app_context():
-        # Pravi tabele koje još ne postoje
         db.create_all()
 
         # Primeri članaka za prazan blog (SEED_DEMO_POSTS=true na serveru)

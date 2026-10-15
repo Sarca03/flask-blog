@@ -1,27 +1,7 @@
-# Python
 __pycache__/
-*.py[cod]
-*$py.class
-*.so
-.Python
+*.pyc
 venv/
-env/
-ENV/
-
-# Flask
 instance/
 *.db
-*.sqlite
-
-# Env
 .env
-.env.local
-
-# IDE
-.vscode/
-.idea/
-*.swp
-
-# OS
 .DS_Store
-Thumbs.db

@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="form-page narrow" style="max-width:440px">
+    <h1>{{ code }}</h1>
+    <p>{{ message }}</p>
+    <p class="form-foot"><a href="{{ url_for('routes.home') }}">Nazad na početnu</a></p>
+</section>
+{% endblock %}

@@ -138,3 +138,14 @@ def delete_post(post_id):
     db.session.commit()
     flash('Članak je obrisan.', 'info')
     return redirect(url_for('routes.home'))
+
+@bp.app_errorhandler(403)
+def forbidden(error):
+    return render_template('error.html', title='Nema pristupa', code=403,
+                           message='Nemaš pristup ovoj stranici.'), 403
+
+
+@bp.app_errorhandler(404)
+def not_found(error):
+    return render_template('error.html', title='Stranica ne postoji', code=404,
+                           message='Ova stranica ne postoji.'), 404
